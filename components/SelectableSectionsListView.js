@@ -1,8 +1,9 @@
 'use strict';
 /* jshint esnext: true */
 
+import PropTypes from 'prop-types';
 var React = require('react-native');
-var {Component, ListView, StyleSheet, View, PropTypes} = React;
+var {Component, ListView, StyleSheet, View} = React;
 var UIManager = require('NativeModules').UIManager;
 var merge = require('merge');
 
