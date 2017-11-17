@@ -1,10 +1,12 @@
 'use strict';
 /* jshint esnext: true */
 
-import PropTypes from 'prop-types';
-var React = require('react-native');
-var {Component, ListView, StyleSheet, View} = React;
-var UIManager = require('NativeModules').UIManager;
+var React = require('react');
+var ReactNative = require('react-native');
+var {Component} = React;
+var PropTypes = require('prop-types');
+var {ListView, StyleSheet, View, NativeModules} = ReactNative;
+var UIManager = NativeModules.UIManager;
 var merge = require('merge');
 
 var SectionHeader = require('./SectionHeader');
@@ -48,7 +50,7 @@ class SelectableSectionsListView extends Component {
   componentDidMount() {
     // push measuring into the next tick
     setTimeout(() => {
-      UIManager.measure(this.refs.view.getNodeHandle(), (x,y,w,h) => {
+      UIManager.measure(ReactNative.findNodeHandle(this.refs.view), (x,y,w,h) => {
         this.containerHeight = h;
       });
     }, 0);
@@ -109,12 +111,12 @@ class SelectableSectionsListView extends Component {
       var maxY = this.totalHeight - this.containerHeight + headerHeight;
       y = y > maxY ? maxY : y;
 
-      this.refs.listview.refs.listviewscroll.scrollTo(y, 0);
+      this.refs.listview.scrollTo({ x:0, y, animated: true });
     } else {
       // this breaks, if not all of the listview is pre-rendered!
       UIManager.measure(this.cellTagMap[section], (x, y, w, h) => {
         y = y - this.props.sectionHeaderHeight;
-        this.refs.listview.refs.listviewscroll.scrollTo(y, 0);
+        this.refs.listview.scrollTo({ x:0, y, animated: true });
       });
     }
 
@@ -209,6 +211,7 @@ class SelectableSectionsListView extends Component {
           style={this.props.sectionListStyle}
           onSectionSelect={this.scrollToSection}
           sections={Object.keys(data)}
+          data={data}
           getSectionListTitle={this.props.getSectionListTitle}
           component={this.props.sectionListItem}
         /> :
@@ -226,7 +229,7 @@ class SelectableSectionsListView extends Component {
       this.renderHeader :
       this.props.renderHeader;
 
-    var props = merge(this.props, {
+    var props = merge({}, this.props, {
       onScroll: this.onScroll,
       onScrollAnimationEnd: this.onScrollAnimationEnd,
       dataSource,

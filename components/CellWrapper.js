@@ -1,13 +1,15 @@
 'use strict';
 
-var React = require('react-native');
-var {Component, View} = React;
-import PropTypes from 'prop-types';
+var React = require('react');
+var ReactNative = require('react-native');
+var {Component} = React;
+var PropTypes = require('prop-types');
+var {View} = ReactNative;
 
 class CellWrapper extends Component {
 
   componentDidMount() {
-    this.props.updateTag && this.props.updateTag(this.refs.view.getNodeHandle(), this.props.sectionId);
+    this.props.updateTag && this.props.updateTag(ReactNative.findNodeHandle(this.refs.view), this.props.sectionId);
   }
 
   render() {
